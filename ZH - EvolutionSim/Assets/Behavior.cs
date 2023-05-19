@@ -147,7 +147,7 @@ public class Behavior : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(3);
-            if (stamina >= 20)
+            if (stamina >= 25)
             {
                 GameManager.Instance.SummonCreature(gameObject);
             }

@@ -352,7 +352,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: speedCap
-      value: 2
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: timeSpeed
@@ -380,11 +380,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: mutationAmount
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: mutationChance
-      value: 0.5
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162542, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: m_Name
