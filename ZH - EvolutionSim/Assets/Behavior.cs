@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class Behavior : MonoBehaviour
 {
+    
+    public int generation; 
+    
     public float[] inputs;
     public float mutationChance;
     [FormerlySerializedAs("mutationRate")] 
     public float mutationAmount;
     public int speed;
-    public int stamina;
+    public float stamina;
     public int rotateSpeed;
 
     public Vector2 minBounds;
@@ -24,36 +28,53 @@ public class Behavior : MonoBehaviour
 
     private bool isMutated;
 
+    private Vector2 initialPos;
+    public float velocity;
+
+    public float secondsWithoutFood;
+
+    public float speedCap;
+    
+
 
     // Start is called before the first frame update
     void Start()
     {
-        inputs = new float[2];
+        inputs = new float[3];
         StartCoroutine(staminaDrain(1));
         StartCoroutine(reproduce());
         isMutated = false;
+        secondsWithoutFood = 0;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        Time.timeScale = GameManager.Instance.timeSpeed;
+        
         if (!isMutated)
         {
             GetComponent<NeuralNetwork>().MutateNetwork(mutationChance, mutationAmount);
             isMutated = true;
         }
         
-        
-        Vector2 newPos = new Vector2(Mathf.Clamp(transform.position.x, minBounds.x, maxBounds.x), Mathf.Clamp(transform.position.y, minBounds.y, maxBounds.y));
-        transform.position = newPos;
 
         inputs[0] = closestFood().x;
         inputs[1] = closestFood().y;
+        inputs[2] = stamina;
 
         float[] outputs = gameObject.GetComponent<NeuralNetwork>().Brain(inputs);
-        
+
+        //print(outputs[0]);
         
         Move(outputs[0], outputs[1]);
+        
+        Vector3 newPos = new Vector3();
+        newPos.x = Mathf.Clamp(transform.position.x, minBounds.x, maxBounds.x);
+        newPos.y = Mathf.Clamp(transform.position.y, minBounds.y, maxBounds.y);
+        newPos.z = -.5f;
+        
+        transform.position = newPos;
         
         Death();
     }
@@ -61,8 +82,20 @@ public class Behavior : MonoBehaviour
     void Move(float FrontBack, float LeftRight)
     {
         transform.Rotate(0, 0, LeftRight * rotateSpeed * Time.deltaTime);
+
+        initialPos = transform.position;
+
+        var fast = FrontBack * speed * Time.deltaTime;
+
+        if (fast > speedCap)
+        {
+            fast = speedCap;
+        }
         
-        transform.Translate(Vector3.forward * (FrontBack * speed * Time.deltaTime));
+        transform.Translate(Vector3.up * (fast));
+
+        velocity = Mathf.Sqrt(Mathf.Pow(Mathf.Abs(transform.position.x - initialPos.x), 2) +
+                              Mathf.Pow(Mathf.Abs(transform.position.y - initialPos.y), 2));
     }
 
     //TODO this is so bad pls fix
@@ -93,7 +126,8 @@ public class Behavior : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Food"))
         {
-            stamina += 10;
+            stamina += 5;
+            secondsWithoutFood = 0;
             Destroy(col.gameObject);
         }
     }
@@ -102,7 +136,8 @@ public class Behavior : MonoBehaviour
     {
         while (true)
         {
-            stamina -= 1;
+            stamina -= (1 * velocity) + secondsWithoutFood;
+            secondsWithoutFood += 1;
             yield return new WaitForSeconds(time);
         }
     }
@@ -111,12 +146,10 @@ public class Behavior : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(2);
-            if (stamina >= 15)
+            yield return new WaitForSeconds(3);
+            if (stamina >= 20)
             {
-                var obj = Instantiate(prefab, new Vector3(transform.position.x + Random.Range(-1, 2), transform.position.y + Random.Range(-1, 2), 0), Quaternion.identity);
-                obj.GetComponent<NeuralNetwork>().layers = GetComponent<NeuralNetwork>().CopyLayers();
-                stamina -= 5;
+                GameManager.Instance.SummonCreature(gameObject);
             }
         }
     }

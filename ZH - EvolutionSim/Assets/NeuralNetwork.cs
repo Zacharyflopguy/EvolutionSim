@@ -37,7 +37,21 @@ public class NeuralNetwork : MonoBehaviour
             weightsArray = new float[numNodes, numInputs];
             biasArray = new float[numNodes];
             nodesArray = new float[numNodes];
-            
+
+            //Initialize random weights and biases
+            for (int i = 0; i < numNodes; i++)
+            {
+                for (int j = 0; j < numInputs; j++)
+                {
+                    weightsArray[i, j] = Random.Range(-1f, 1f);
+                }
+            }
+
+            //Initialize bias to zero
+            for (int i = 0; i < numNodes; i++)
+            {
+                biasArray[i] = 0;
+            }
         }
 
         public void ForwardThruNetwork(float[] previousInputs)
@@ -107,10 +121,11 @@ public class NeuralNetwork : MonoBehaviour
                 layers[i].ForwardThruNetwork(inputs);
                 layers[i].Activation();
             }
-            //Output layer has no activation finction
+            //Output layer has no activation function
             else if (i == layers.Length - 1)
             {
                 layers[i].ForwardThruNetwork(layers[i - 1].nodesArray);
+                layers[i].Activation();
             }
             //All other cases
             else
