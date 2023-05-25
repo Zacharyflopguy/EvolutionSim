@@ -34,7 +34,8 @@ public class Behavior : MonoBehaviour
     public float secondsWithoutFood;
 
     public float speedCap;
-    
+
+
 
 
     // Start is called before the first frame update
@@ -42,7 +43,7 @@ public class Behavior : MonoBehaviour
     {
         inputs = new float[3];
         StartCoroutine(staminaDrain(1));
-        StartCoroutine(reproduce());
+        //StartCoroutine(reproduce());
         isMutated = false;
         secondsWithoutFood = 0;
     }
@@ -118,6 +119,7 @@ public class Behavior : MonoBehaviour
     {
         if (stamina <= 0)
         {
+            GameManager.Instance.creaturesForRound.Remove(gameObject);
             Destroy(gameObject);
         }
     }
@@ -128,6 +130,7 @@ public class Behavior : MonoBehaviour
         {
             stamina += 5;
             secondsWithoutFood = 0;
+            foodSpawner.GetComponent<SpawnFood>().Despawn(col.gameObject);
             Destroy(col.gameObject);
         }
     }

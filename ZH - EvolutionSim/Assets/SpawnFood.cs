@@ -8,7 +8,7 @@ public class SpawnFood : MonoBehaviour
 {
     public GameObject prefab;
     public int numFoodStart;
-    public int spawnRate;
+    public float spawnRate;
     public Vector2 minSpawn;
     public Vector2 maxSpawn;
     
@@ -44,6 +44,11 @@ public class SpawnFood : MonoBehaviour
             obj.SetActive(true);
             foodPositions.Add(obj.transform.position);
         }
+    }
+
+    public void Despawn(GameObject foodObj)
+    {
+        foodPositions.Remove(foodObj.transform.position);
     }
     
     public IEnumerator waitSpawn(int numFood)
