@@ -41,6 +41,7 @@ public class SpawnFood : MonoBehaviour
             }
             
             var obj = Instantiate(prefab, pos, Quaternion.identity);
+            //obj = new GameObject();
             obj.SetActive(true);
             foodPositions.Add(obj.transform.position);
         }

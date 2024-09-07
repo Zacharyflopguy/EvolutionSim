@@ -35,34 +35,48 @@ public class Behavior : MonoBehaviour
 
     public float speedCap;
 
+    public int rayDist;
+
+    public LayerMask layer;
+
+    public int foodCollected;
+    
+
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        inputs = new float[3];
+        inputs = new float[4];
         StartCoroutine(staminaDrain(1));
         //StartCoroutine(reproduce());
         isMutated = false;
         secondsWithoutFood = 0;
+        foodCollected = 0;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         Time.timeScale = GameManager.Instance.timeSpeed;
-        
+
         if (!isMutated)
         {
             GetComponent<NeuralNetwork>().MutateNetwork(mutationChance, mutationAmount);
             isMutated = true;
+            
+            // GetComponent<NeuralNetwork>().PrintNetwork();
         }
         
+        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, (gameObject.transform.up), rayDist, layer);
 
-        inputs[0] = closestFood().x;
-        inputs[1] = closestFood().y;
-        inputs[2] = stamina;
+        //Debug.DrawRay(gameObject.transform.position, (gameObject.transform.up), Color.red, 3);
+        
+        inputs[0] = hit.point.x;
+        inputs[1] = hit.point.y;
+        inputs[2] = hit.distance;
+        inputs[3] = stamina;
 
         float[] outputs = gameObject.GetComponent<NeuralNetwork>().Brain(inputs);
 
@@ -130,6 +144,7 @@ public class Behavior : MonoBehaviour
         {
             stamina += 5;
             secondsWithoutFood = 0;
+            foodCollected++;
             foodSpawner.GetComponent<SpawnFood>().Despawn(col.gameObject);
             Destroy(col.gameObject);
         }

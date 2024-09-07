@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86307dc92b79d5848af65f71329c8094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkShape: 03000000280000002800000028000000280000002800000002000000
+  networkShape: 04000000280000002800000028000000280000002800000002000000
 --- !u!114 &8945334811307162539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,6 +320,11 @@ MonoBehaviour:
   prefab: {fileID: 8945334811307162542}
   velocity: 0
   secondsWithoutFood: 0
+  speedCap: 0
+  rayDist: 4
+  layer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!61 &5637466731828522574
 BoxCollider2D:
   m_ObjectHideFlags: 0

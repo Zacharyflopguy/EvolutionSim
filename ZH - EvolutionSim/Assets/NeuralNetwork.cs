@@ -90,7 +90,7 @@ public class NeuralNetwork : MonoBehaviour
             {
                 for (int j = 0; j < numInputs; j++)
                 {
-                    if(Random.value < mutationChance)
+                    if (Random.value < mutationChance)
                         weightsArray[i, j] += Random.Range(-1f, 1f) * mutationAmount;
                 }
                 
@@ -156,6 +156,48 @@ public class NeuralNetwork : MonoBehaviour
         foreach (var layer in layers)
         {
             layer.MutateLayer(mutationChance, mutationAmount);
+        }
+    }
+    
+    public void PrintNetwork()
+    {
+        for (int i = 0; i < layers.Length; i++)
+        {
+            Debug.Log("Layer " + i);
+            Debug.Log("Weights");
+            for (int j = 0; j < layers[i].weightsArray.GetLength(0); j++)
+            {
+                for (int k = 0; k < layers[i].weightsArray.GetLength(1); k++)
+                {
+                    Debug.Log(layers[i].weightsArray[j, k]);
+                }
+            }
+            Debug.Log("Biases");
+            for (int j = 0; j < layers[i].biasArray.GetLength(0); j++)
+            {
+                Debug.Log(layers[i].biasArray[j]);
+            }
+        }
+    }
+    
+    public void PrintNetwork(Layer[] inputLayers)
+    {
+        for (int i = 0; i < inputLayers.Length; i++)
+        {
+            Debug.Log("Layer " + i);
+            Debug.Log("Weights");
+            for (int j = 0; j < inputLayers[i].weightsArray.GetLength(0); j++)
+            {
+                for (int k = 0; k < inputLayers[i].weightsArray.GetLength(1); k++)
+                {
+                    Debug.Log(inputLayers[i].weightsArray[j, k]);
+                }
+            }
+            Debug.Log("Biases");
+            for (int j = 0; j < inputLayers[i].biasArray.GetLength(0); j++)
+            {
+                Debug.Log(inputLayers[i].biasArray[j]);
+            }
         }
     }
 }

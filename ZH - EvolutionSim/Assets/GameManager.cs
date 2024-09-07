@@ -62,6 +62,9 @@ public class GameManager : MonoBehaviour
         obj.GetComponent<Behavior>().generation = parent.GetComponent<Behavior>().generation + 1;
         obj.GetComponentInChildren<TextMeshPro>().text = obj.GetComponent<Behavior>().generation.ToString();
 
+        // parent.GetComponent<NeuralNetwork>().PrintNetwork();
+        // parent.GetComponent<NeuralNetwork>().PrintNetwork(parent.GetComponent<NeuralNetwork>().CopyLayers());
+        
         return obj;
     }
     
@@ -96,6 +99,7 @@ public class GameManager : MonoBehaviour
                 {
                     //TODO treats all survivors equally, and not all may produce. See if there is a way to weight the survivors?
                     var parent = creaturesForRound[Random.Range(0, creaturesForRound.Count)];
+                    parent = FitnessCalc();
                     var child = SummonCreature(parent);
                     tempNewObjs.Add(child);
                 }
@@ -128,5 +132,29 @@ public class GameManager : MonoBehaviour
             roundNumber++;
             yield return new WaitForSeconds(timePerRound);
         }
+    }
+
+    private GameObject FitnessCalc()
+    {
+        if (creaturesForRound.Count <= 0)
+            return null;
+        
+        float bestFitScore = -9999;
+        int bestFitIndex = 0;
+
+        for (int i = 0; i < creaturesForRound.Count; i++)
+        {
+            //Calculate fitness on stamina left on round end and food collected
+            int tempFit = ((int)creaturesForRound[i].GetComponent<Behavior>().stamina / 2) +
+                          creaturesForRound[i].GetComponent<Behavior>().foodCollected * 2;
+
+            if (tempFit > bestFitScore)
+            {
+                bestFitIndex = tempFit;
+                bestFitIndex = i;
+            }
+        }
+
+        return creaturesForRound[bestFitIndex];
     }
 }
