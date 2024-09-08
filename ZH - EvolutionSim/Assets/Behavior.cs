@@ -17,6 +17,7 @@ public class Behavior : MonoBehaviour
     public float mutationAmount;
     public int speed;
     public float stamina;
+    public float staminaMax;
     public int rotateSpeed;
 
     public Vector2 minBounds;
@@ -35,11 +36,17 @@ public class Behavior : MonoBehaviour
 
     public float speedCap;
 
-    public int rayDist;
+    public float rayDist;
+
+    public float rayAngleOffset;
 
     public LayerMask layer;
 
     public int foodCollected;
+    
+    private Vector2 rightRayDirection;
+    
+    private Vector2 leftRayDirection;
     
 
 
@@ -48,12 +55,13 @@ public class Behavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inputs = new float[4];
+        inputs = new float[6];
         StartCoroutine(staminaDrain(1));
         //StartCoroutine(reproduce());
         isMutated = false;
         secondsWithoutFood = 0;
         foodCollected = 0;
+        stamina = staminaMax;
     }
 
     // Update is called once per frame
@@ -69,18 +77,27 @@ public class Behavior : MonoBehaviour
             // GetComponent<NeuralNetwork>().PrintNetwork();
         }
         
-        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, (gameObject.transform.up), rayDist, layer);
-
-        //Debug.DrawRay(gameObject.transform.position, (gameObject.transform.up), Color.red, 3);
+        //Set Angle Offsets
+        leftRayDirection = Quaternion.Euler(0, 0, rayAngleOffset) * transform.up;
+        rightRayDirection = Quaternion.Euler(0, 0, -rayAngleOffset) * transform.up;
         
-        inputs[0] = hit.point.x;
-        inputs[1] = hit.point.y;
-        inputs[2] = hit.distance;
-        inputs[3] = stamina;
+        RaycastHit2D centerRaycast = Physics2D.Raycast(gameObject.transform.position, (gameObject.transform.up), rayDist, layer);
+        RaycastHit2D leftRaycast = Physics2D.Raycast(gameObject.transform.position, (leftRayDirection), rayDist, layer);
+        RaycastHit2D rightRaycast = Physics2D.Raycast(gameObject.transform.position, (rightRayDirection), rayDist, layer);
+
+        Debug.DrawRay(gameObject.transform.position, (gameObject.transform.up * rayDist), Color.red, .02f);
+        Debug.DrawRay(gameObject.transform.position, (leftRayDirection * rayDist), Color.red, .02f);
+        Debug.DrawRay(gameObject.transform.position, (rightRayDirection *  rayDist), Color.red, .02f);
+        
+        //Set Inputs
+        inputs[0] = NormalizeDistance(leftRaycast.distance, rayDist);
+        inputs[1] = NormalizeDistance(rightRaycast.distance, rayDist);
+        inputs[2] = NormalizeDistance(centerRaycast.distance, rayDist);
+        inputs[3] = NormalizeStamina(stamina, staminaMax); //Stamina
+        inputs[4] = NormalizeVelocity(velocity, speedCap); //Speed
+        inputs[5] = Mathf.Sin(transform.eulerAngles.z * Mathf.Deg2Rad); //Rotation
 
         float[] outputs = gameObject.GetComponent<NeuralNetwork>().Brain(inputs);
-
-        //print(outputs[0]);
         
         Move(outputs[0], outputs[1]);
         
@@ -90,6 +107,9 @@ public class Behavior : MonoBehaviour
         newPos.z = -.5f;
         
         transform.position = newPos;
+        
+        //Clamp Stamina
+        //stamina = Mathf.Clamp(stamina, 0, staminaMax);
         
         Death();
     }
@@ -131,11 +151,11 @@ public class Behavior : MonoBehaviour
     
     void Death()
     {
-        if (stamina <= 0)
+        /*if (stamina <= 0)
         {
             GameManager.Instance.creaturesForRound.Remove(gameObject);
             Destroy(gameObject);
-        }
+        }*/
     }
     
     private void OnTriggerEnter2D(Collider2D col)
@@ -172,4 +192,18 @@ public class Behavior : MonoBehaviour
         }
     }
     
+    public float NormalizeDistance(float distance, float maxDistance)
+    {
+        return Mathf.Clamp01(distance / maxDistance);
+    }
+    
+    float NormalizeStamina(float currentStamina, float maxStamina)
+    {
+        return Mathf.Clamp01(currentStamina / maxStamina);
+    }
+    
+    float NormalizeVelocity(float currentVelocity, float maxVelocity)
+    {
+        return Mathf.Clamp01(currentVelocity / maxVelocity);
+    }
 }

@@ -79,8 +79,9 @@ public class NeuralNetwork : MonoBehaviour
             //Uses ReLU activation function
             for (int i = 0; i < numNodes; i++)
             {
-                if(nodesArray[i] < 0)
-                    nodesArray[i] = 0;
+                nodesArray[i] = (float)Math.Tanh(nodesArray[i]);
+                //if(nodesArray[i] < 0)
+                    //nodesArray[i] = 0;
             }
         }
         
@@ -200,4 +201,6 @@ public class NeuralNetwork : MonoBehaviour
             }
         }
     }
+    
+    
 }

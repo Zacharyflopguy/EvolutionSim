@@ -344,11 +344,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: speed
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: rayDist
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: stamina
@@ -361,6 +361,10 @@ PrefabInstance:
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: timeSpeed
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
+      propertyPath: staminaMax
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: foodSpawner
@@ -383,16 +387,24 @@ PrefabInstance:
       value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
+      propertyPath: rotateSpeed
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: layer.m_Bits
       value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: mutationAmount
-      value: 0
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: mutationChance
       value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8945334811307162539, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
+      propertyPath: rayAngleOffset
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162542, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: m_Name
@@ -408,15 +420,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162543, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: networkShape.Array.data[0]
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162543, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: networkShape.Array.data[1]
-      value: 2
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162543, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: networkShape.Array.data[2]
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162543, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: networkShape.Array.data[3]
@@ -522,8 +534,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 967728150}
-  numFoodStart: 100
-  spawnRate: 0.2
+  numFoodStart: 25
+  spawnRate: 0.4
   minSpawn: {x: -8.6, y: -4.6}
   maxSpawn: {x: 8.3, y: 4.3}
   foodPositions: []
@@ -603,7 +615,7 @@ PrefabInstance:
       objectReference: {fileID: 724960919}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: timeSpeed
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: maxSpawn.x
@@ -623,7 +635,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: numPerRound
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: timeForRound

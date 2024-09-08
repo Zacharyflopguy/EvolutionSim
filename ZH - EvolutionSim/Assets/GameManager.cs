@@ -93,13 +93,12 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            var parent = FitnessCalc();
             for (int i = 0; i < numCreaturesPerRound; i++)
             {
                 try
                 {
                     //TODO treats all survivors equally, and not all may produce. See if there is a way to weight the survivors?
-                    var parent = creaturesForRound[Random.Range(0, creaturesForRound.Count)];
-                    parent = FitnessCalc();
                     var child = SummonCreature(parent);
                     tempNewObjs.Add(child);
                 }
@@ -150,7 +149,7 @@ public class GameManager : MonoBehaviour
 
             if (tempFit > bestFitScore)
             {
-                bestFitIndex = tempFit;
+                bestFitScore = tempFit;
                 bestFitIndex = i;
             }
         }
