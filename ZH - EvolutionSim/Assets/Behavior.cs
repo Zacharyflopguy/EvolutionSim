@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -30,6 +31,7 @@ public class Behavior : MonoBehaviour
     private bool isMutated;
 
     private Vector2 initialPos;
+    
     public float velocity;
 
     public float secondsWithoutFood;
@@ -47,8 +49,11 @@ public class Behavior : MonoBehaviour
     private Vector2 rightRayDirection;
     
     private Vector2 leftRayDirection;
-    
 
+    [NonSerialized]
+    public double velocityFitness;
+    
+    
 
 
 
@@ -62,6 +67,7 @@ public class Behavior : MonoBehaviour
         secondsWithoutFood = 0;
         foodCollected = 0;
         stamina = staminaMax;
+        velocityFitness = 0;
     }
 
     // Update is called once per frame
@@ -110,27 +116,52 @@ public class Behavior : MonoBehaviour
         
         //Clamp Stamina
         //stamina = Mathf.Clamp(stamina, 0, staminaMax);
+
+        VelocityFitnessCalc();
         
         Death();
     }
-
+    
     void Move(float FrontBack, float LeftRight)
     {
+        // Rotate the creature
         transform.Rotate(0, 0, LeftRight * rotateSpeed * Time.deltaTime);
 
+        // Store the initial position before moving
         initialPos = transform.position;
 
+        // Calculate movement speed
         var fast = FrontBack * speed * Time.deltaTime;
 
+        // Cap the speed if necessary
         if (fast > speedCap)
         {
             fast = speedCap;
         }
-        
-        transform.Translate(Vector3.up * (fast));
 
-        velocity = Mathf.Sqrt(Mathf.Pow(Mathf.Abs(transform.position.x - initialPos.x), 2) +
-                              Mathf.Pow(Mathf.Abs(transform.position.y - initialPos.y), 2));
+        // Move the creature along the local "up" axis (forward direction)
+        transform.Translate(Vector3.up * fast);
+
+        // Calculate the movement direction vector (from initial position to new position)
+        Vector2 movementDirection = ((Vector2)transform.position - initialPos).normalized;
+
+        // Get the creature's forward direction
+        Vector2 forwardDirection = transform.up.normalized;
+
+        // Calculate the velocity magnitude (Euclidean distance between positions)
+        float velocityMagnitude = Vector2.Distance(initialPos, transform.position);
+
+        // Use dot product to determine if movement is in the forward direction or backward
+        float alignment = Vector2.Dot(forwardDirection, movementDirection);
+
+        // If alignment is negative, it means the creature is moving backward
+        if (alignment < 0)
+        {
+            velocityMagnitude = -velocityMagnitude;  // Invert the velocity to indicate backward movement
+        }
+
+        // Set velocity to the directionally aware magnitude
+        velocity = velocityMagnitude;
     }
 
     //TODO this is so bad pls fix
@@ -205,5 +236,13 @@ public class Behavior : MonoBehaviour
     float NormalizeVelocity(float currentVelocity, float maxVelocity)
     {
         return Mathf.Clamp01(currentVelocity / maxVelocity);
+    }
+
+    void VelocityFitnessCalc()
+    {
+        if (velocity > 0)
+            velocityFitness += 0.1;
+        else
+            velocityFitness -= 0.1;
     }
 }

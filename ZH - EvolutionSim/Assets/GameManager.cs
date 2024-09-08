@@ -24,12 +24,16 @@ public class GameManager : MonoBehaviour
     public int numPerRound;
     
     public float timeForRound;
+    
+    [NonSerialized]
+    public FitnessLogger fitnessLogger;
 
     // Start is called before the first frame update
     void Start()
     {
         roundNumber = 0;
         StartCoroutine(RoundControl(timeForRound));
+        fitnessLogger = new FitnessLogger();
     }
 
     // Update is called once per frame
@@ -115,7 +119,6 @@ public class GameManager : MonoBehaviour
 
         foreach (var obj in creaturesForRound)
         {
-            print(obj);
             Destroy(obj);
         }
         
@@ -133,7 +136,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private GameObject FitnessCalc()
+    /*private GameObject FitnessCalc()
     {
         if (creaturesForRound.Count <= 0)
             return null;
@@ -144,8 +147,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < creaturesForRound.Count; i++)
         {
             //Calculate fitness on stamina left on round end and food collected
-            int tempFit = ((int)creaturesForRound[i].GetComponent<Behavior>().stamina / 2) +
-                          creaturesForRound[i].GetComponent<Behavior>().foodCollected * 2;
+            int tempFit = (int)creaturesForRound[i].GetComponent<Behavior>().stamina / 2 +
+                          creaturesForRound[i].GetComponent<Behavior>().foodCollected * 2 +
+                          (int)creaturesForRound[i].GetComponent<Behavior>().velocityFitness / 10;
+            
+            print((int)creaturesForRound[i].GetComponent<Behavior>().velocityFitness / 10);
 
             if (tempFit > bestFitScore)
             {
@@ -153,6 +159,59 @@ public class GameManager : MonoBehaviour
                 bestFitIndex = i;
             }
         }
+        
+        fitnessLogger.LogFitness(bestFitScore);
+
+        return creaturesForRound[bestFitIndex];
+    }*/
+    
+    private GameObject FitnessCalc()
+    {
+        if (creaturesForRound.Count <= 0)
+            return null;
+    
+        float bestFitScore = float.MinValue;  // Use float.MinValue to avoid unrealistic magic numbers
+        int bestFitIndex = 0;
+    
+        float maxStamina = 0f;
+        float maxFoodCollected = 0f;
+        float maxVelocityFitness = 0f;
+
+        // Find max values for normalization
+        for (int i = 0; i < creaturesForRound.Count; i++)
+        {
+            var behavior = creaturesForRound[i].GetComponent<Behavior>();
+            if (behavior.stamina > maxStamina) maxStamina = behavior.stamina;
+            if (behavior.foodCollected > maxFoodCollected) maxFoodCollected = behavior.foodCollected;
+            if (behavior.velocityFitness > maxVelocityFitness) maxVelocityFitness = (float)behavior.velocityFitness;
+        }
+    
+        for (int i = 0; i < creaturesForRound.Count; i++)
+        {
+            var behavior = creaturesForRound[i].GetComponent<Behavior>();
+        
+            // Normalize components to avoid large disparity between them
+            float normalizedStamina = (maxStamina == 0) ? 0 : behavior.stamina / maxStamina;
+            float normalizedFoodCollected = (maxFoodCollected == 0) ? 0 : behavior.foodCollected / maxFoodCollected;
+            float normalizedVelocityFitness = (maxVelocityFitness == 0) ? 0 : (float)behavior.velocityFitness / maxVelocityFitness;
+
+            // Apply weights for each component (can adjust based on desired behavior)
+            float staminaWeight = 0.5f;
+            float foodWeight = 2f;
+            float velocityWeight = 1f;
+
+            float tempFit = normalizedStamina * staminaWeight +
+                            normalizedFoodCollected * foodWeight +
+                            normalizedVelocityFitness * velocityWeight;
+        
+            if (tempFit > bestFitScore)
+            {
+                bestFitScore = tempFit;
+                bestFitIndex = i;
+            }
+        }
+
+        fitnessLogger.LogFitness(bestFitScore);
 
         return creaturesForRound[bestFitIndex];
     }
