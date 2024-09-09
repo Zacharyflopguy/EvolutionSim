@@ -436,11 +436,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162543, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: networkShape.Array.data[4]
-      value: 60
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162543, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: networkShape.Array.data[5]
-      value: 60
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
@@ -763,7 +763,7 @@ PrefabInstance:
       objectReference: {fileID: 724960919}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: timeSpeed
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: maxSpawn.x
@@ -791,7 +791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: timeForRound
-      value: 12
+      value: 16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
