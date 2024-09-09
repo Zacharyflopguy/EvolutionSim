@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     
     [NonSerialized]
     public FitnessLogger fitnessLogger;
+    
+    public SpawnFood foodSpawner;
 
     // Start is called before the first frame update
     void Start()
@@ -97,6 +99,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            foodSpawner.ClearFoodList();
+            foodSpawner.Spawn(foodSpawner.numFoodStart);
             var parent = FitnessCalc();
             for (int i = 0; i < numCreaturesPerRound; i++)
             {

@@ -11,15 +11,17 @@ public class SpawnFood : MonoBehaviour
     public float spawnRate;
     public Vector2 minSpawn;
     public Vector2 maxSpawn;
+
+    private List<GameObject> spawnedFood;
     
     public List<Vector2> foodPositions;
 
     // Start is called before the first frame update
     void Start()
     {
+        spawnedFood = new List<GameObject>();
         Spawn(numFoodStart);
         StartCoroutine(waitSpawn(1));
-        
     }
 
     private void Update()
@@ -43,6 +45,7 @@ public class SpawnFood : MonoBehaviour
             var obj = Instantiate(prefab, pos, Quaternion.identity);
             //obj = new GameObject();
             obj.SetActive(true);
+            spawnedFood.Add(obj);
             foodPositions.Add(obj.transform.position);
         }
     }
@@ -50,6 +53,15 @@ public class SpawnFood : MonoBehaviour
     public void Despawn(GameObject foodObj)
     {
         foodPositions.Remove(foodObj.transform.position);
+    }
+
+    public void ClearFoodList()
+    {
+        foreach (GameObject obj in spawnedFood)
+        {
+            Destroy(obj);
+        }
+        spawnedFood.Clear();
     }
     
     public IEnumerator waitSpawn(int numFood)

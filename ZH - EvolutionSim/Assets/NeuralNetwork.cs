@@ -93,10 +93,16 @@ public class NeuralNetwork : MonoBehaviour
                 {
                     if (Random.value < mutationChance)
                         weightsArray[i, j] += Random.Range(-1f, 1f) * mutationAmount;
+                    
+                    //Clamp Weight Mutation
+                    weightsArray[i, j] = Mathf.Clamp(weightsArray[i, j], -1f, 1f);
                 }
                 
                 if(Random.value < mutationChance)
                     biasArray[i] += Random.Range(-1f, 1f) * mutationAmount;
+                
+                //Clamp Bias Mutation
+                biasArray[i] = Mathf.Clamp(biasArray[i], -1f, 1f);
             }
         }
         

@@ -682,8 +682,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 967728150}
-  numFoodStart: 25
-  spawnRate: 0.75
+  numFoodStart: 20
+  spawnRate: 999999
   minSpawn: {x: -8.6, y: -4.6}
   maxSpawn: {x: 8.3, y: 4.3}
   foodPositions: []
@@ -781,6 +781,10 @@ PrefabInstance:
       propertyPath: minSpawn.y
       value: -4.6
       objectReference: {fileID: 0}
+    - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 2100552494}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: numPerRound
       value: 6
