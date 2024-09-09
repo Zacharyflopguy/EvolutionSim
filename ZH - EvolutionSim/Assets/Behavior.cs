@@ -52,6 +52,9 @@ public class Behavior : MonoBehaviour
 
     [NonSerialized]
     public double velocityFitness;
+
+    [NonSerialized]
+    public float foodProximityFitness;
     
     
 
@@ -68,6 +71,7 @@ public class Behavior : MonoBehaviour
         foodCollected = 0;
         stamina = staminaMax;
         velocityFitness = 0;
+        foodProximityFitness = 0;
     }
 
     // Update is called once per frame
@@ -102,6 +106,41 @@ public class Behavior : MonoBehaviour
         inputs[3] = NormalizeStamina(stamina, staminaMax); //Stamina
         inputs[4] = NormalizeVelocity(velocity, speedCap); //Speed
         inputs[5] = Mathf.Sin(transform.eulerAngles.z * Mathf.Deg2Rad); //Rotation
+        
+        //Food Proximity Fitness Calc
+        if (leftRaycast.collider != null)
+        {
+            // Invert the distance to reward being closer to food
+            float leftDist = (1 - NormalizeDistance(leftRaycast.distance, rayDist)) / 6;
+            foodProximityFitness += leftDist;
+        }
+        else
+        {
+            // Penalize if no food is detected
+            foodProximityFitness -= 0.01f;
+        }
+
+        if (rightRaycast.collider != null)
+        {
+            float rightDist = (1 - NormalizeDistance(rightRaycast.distance, rayDist)) / 6;
+            foodProximityFitness += rightDist;
+        }
+        else
+        {
+            foodProximityFitness -= 0.01f;
+        }
+
+        if (centerRaycast.collider != null)
+        {
+            float centerDist = (1 - NormalizeDistance(centerRaycast.distance, rayDist)) / 6;
+            foodProximityFitness += centerDist;
+        }
+        else
+        {
+            foodProximityFitness -= 0.01f;
+        }
+        
+        print(foodProximityFitness);
 
         float[] outputs = gameObject.GetComponent<NeuralNetwork>().Brain(inputs);
         
@@ -245,4 +284,6 @@ public class Behavior : MonoBehaviour
         else
             velocityFitness -= 0.1;
     }
+
+    
 }

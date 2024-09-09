@@ -180,6 +180,7 @@ public class GameManager : MonoBehaviour
         float maxStamina = 0f;
         float maxFoodCollected = 0f;
         float maxVelocityFitness = 0f;
+        float maxFoodProximity = 0f;
 
         // Find max values for normalization
         for (int i = 0; i < creaturesForRound.Count; i++)
@@ -188,6 +189,7 @@ public class GameManager : MonoBehaviour
             if (behavior.stamina > maxStamina) maxStamina = behavior.stamina;
             if (behavior.foodCollected > maxFoodCollected) maxFoodCollected = behavior.foodCollected;
             if (behavior.velocityFitness > maxVelocityFitness) maxVelocityFitness = (float)behavior.velocityFitness;
+            if (behavior.foodProximityFitness > maxFoodProximity) maxFoodProximity = behavior.foodProximityFitness;
         }
     
         for (int i = 0; i < creaturesForRound.Count; i++)
@@ -198,16 +200,19 @@ public class GameManager : MonoBehaviour
             float normalizedStamina = (maxStamina == 0) ? 0 : behavior.stamina / maxStamina;
             float normalizedFoodCollected = (maxFoodCollected == 0) ? 0 : behavior.foodCollected / maxFoodCollected;
             float normalizedVelocityFitness = (maxVelocityFitness == 0) ? 0 : (float)behavior.velocityFitness / maxVelocityFitness;
+            float normalizedFoodProximity = (maxFoodProximity == 0) ? 0 : behavior.foodProximityFitness / maxFoodProximity;
 
             // Apply weights for each component (can adjust based on desired behavior)
             float staminaWeight = 0.5f;
             float foodWeight = 2f;
             float velocityWeight = 1f;
+            float foodProximityWeight = 1f;
 
             float tempFit = normalizedStamina * staminaWeight +
                             normalizedFoodCollected * foodWeight +
-                            normalizedVelocityFitness * velocityWeight;
-        
+                            normalizedVelocityFitness * velocityWeight +
+                            normalizedFoodProximity * foodProximityWeight;
+            
             if (tempFit > bestFitScore)
             {
                 bestFitScore = tempFit;

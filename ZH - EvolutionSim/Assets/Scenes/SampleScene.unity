@@ -428,7 +428,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162543, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: networkShape.Array.data[2]
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8945334811307162543, guid: 6daad3d6fac86804783561b2102c47f3, type: 3}
       propertyPath: networkShape.Array.data[3]
@@ -763,7 +763,7 @@ PrefabInstance:
       objectReference: {fileID: 724960919}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: timeSpeed
-      value: 10
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1129060892715955885, guid: ca6d31decb2e9e441a9f34a206c6f39f, type: 3}
       propertyPath: maxSpawn.x
